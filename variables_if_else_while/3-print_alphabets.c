@@ -1,7 +1,9 @@
-/*
+/**
  * main - print the ahphabet use putchar
  * print in lowercase and in uppercase
- * followed by a new line */
+ * followed by a new lin
+ * Return: always 0
+ */
 
 #include <stdio.h>
 
@@ -13,8 +15,8 @@
 		putchar(ABC);
 
 	for (ABC = 'A'; ABC <= 'Z'; ABC++)
-	       putchar(ABC);		
+	putchar(ABC);
 		putchar('\n');
 
 	return (0);
-}	
+}
