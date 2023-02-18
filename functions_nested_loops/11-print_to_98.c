@@ -1,16 +1,12 @@
-
-/**
- * print_to_98 
- * Prints all natural numbers from n to 98
- *
- * @n: int
- */
-
 #include "main.h"
 
 void printnumber(int);
 
-
+/**
+ * print_to_98 - Prints all natural numbers from n to 98
+ *
+ * @n: int
+ */
 void print_to_98(int n)
 {
 	if (n > 98)
@@ -36,3 +32,27 @@ void print_to_98(int n)
 	_putchar('\n');
 }
 
+/**
+ * printnumber - prints a number
+ * @n: number to print
+ */
+void printnumber(int n)
+{
+
+	if (n < 0)
+	{
+		_putchar('-');
+		n = -n;
+	}
+
+	if (n == 0)
+	{
+		_putchar('0');
+		return;
+	}
+
+	if (n / 10)
+		printnumber(n / 10);
+
+	_putchar(n % 10 + '0');
+}
