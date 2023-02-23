@@ -1,22 +1,23 @@
 #include "main.h"
 /**
- * The function more_numbers() uses two loops to print the numbers from 0 to 14 ten times. The outer loop iterates 10 times, and the inner loop iterates 15 times
- * */
-
-
-
+** more_numbers - prints 10 times the numbers, from 0 to 14
+**/
 
 void more_numbers(void)
 {
-	int i, j;
+	int n, j;
 
-	for (i = 0; i < 10; i++) {
- 	for (j = 0; j < 15; j++) {
- 	if (j > 9) {
- 	_putchar(j / 10 + '0');
-            }
-            _putchar(j % 10 + '0');
-        }
-        _putchar('\n');
-    }
+	for (n = 0; n < 10; n++)
+{
+	for (j = 0; j < 15; m++)
+{
+	if (m > 9)
+{
+	_putchar(m / 10 + '0');
 }
+	_putchar(m % 10 + '0');
+}
+	_putchar('\n');
+	}
+}
+
