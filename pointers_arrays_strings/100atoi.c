@@ -31,5 +31,5 @@
 	nod = nod * 10 + (*s++ - '0');
 }
 
-	return(at * num);
+	return (at * num);
 }
