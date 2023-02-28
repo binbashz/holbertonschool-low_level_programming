@@ -12,12 +12,13 @@
 void print_rev(char *s)
 {
 	int star = 0;
+	int i;
 
-	for (; s[star]; star++)
+	while (s[star] != '\0'); /* gets the length of the string */
 
-	star -= 1;
+	star++;
 
-	for (; star > -1; star--)
+	for (i = star  -1; star--)
 		printf("%c", s[star]);
 	putchar('\n');
 }
