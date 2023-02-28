@@ -1,4 +1,4 @@
-
+ Pointers Arrays Strings
 #include<stdio.h>
  
 int main()

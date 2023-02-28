@@ -14,11 +14,12 @@ void print_rev(char *s)
 	int star = 0;
 	int i;
 
-	while (s[star] != '\0'); /* gets the length of the string */
+	while (s[star] != '\0') /* gets the length of the string */
 
 	star++;
 
-	for (i = star  -1; star--)
-		printf("%c", s[star]);
+	for (i = star  - 1; i >= 0; i--) /* print the string in reverse */
+	putchar(s[i]);
+
 	putchar('\n');
 }
