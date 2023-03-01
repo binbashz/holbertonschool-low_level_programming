@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define LENGTH 8 // password length
+#define LENGTH 8 /* password length*/
 #define CHARS "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{};':\"\\|,.<>/?`~" /* characters to use in the password*/
 
 int main() {
