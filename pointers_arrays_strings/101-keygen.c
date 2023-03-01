@@ -8,7 +8,7 @@
 int main() {
     srand(time(NULL)); /* seed the random number generator*/
 
-    char password[LENGTH + 1]; /* password array*/
+    char password [LENGTH + 1]; /* password array*/
 
     /*loop to generate the password*/
     for (int i = 0; i < LENGTH; i++)
