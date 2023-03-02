@@ -13,19 +13,19 @@
 #include <stdio.h>
 #include <ctype.h>
 
-	char *string_toupper(char *str)
+	char *string_toupper(char *str) /* function prototype */
 {
-	char *p = str;
+	char *p = str; /* creamos un puntero char que apunte al incio de la cadena */
 
-	while (*p != '\0')
+	while (*p != '\0') /* mientras no llegemos al final de la cadena */
 {
 
-	if (islower(*p))
+	if (islower(*p)) /* si el caracter actual es una letra minuscula */
 {
-	*p = toupper(*p);
+	*p = toupper(*p); /* lo convertimos en mayuscula */
 
 }
-	p++;
+	p++; /* pasamos al siguiente caracter de la cadena */ 
 }
-	return (str);
+	return (str); /* devolvemos un puntero al inicio de la cadena */ 
 }
