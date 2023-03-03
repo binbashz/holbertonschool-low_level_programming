@@ -1,3 +1,4 @@
+#include "main.h"
 
 /**
  * _strspn - gets the length of a prefix substring
@@ -6,33 +7,33 @@
  *
  * Return: the bytes of the found substring
  */
-
-
-#include "main.h"
-
-
-
-
-	unsigned int _strspn(char *s, char *accept)
+unsigned int _strspn(char *s, char *accept)
 {
-	unsigned int i, j;
-	unsigned int count = 0;
+	unsigned int i = 0;
 
-	for (i = 0; s[i] != '\0'; i++)
+	if (!s || !accept)	/*I verify that they are not null pointer*/
+		return (i);
+	while (*s && _strchr(accept, *s++))	/*count from the indicated position*/
+	{
+		i++;
+	}
+	return (i);
+}
+/**
+ * _strchr - locates a character in a string
+ * @s: pointer to the string
+ * @c: desired character
+ *
+ * Return: to the matching position, if equal 0
+ */
+char *_strchr(char *s, char c)
 {
-	for (j = 0; accept[j] != '\0'; j++)
-{
-	if (s[i] == accept[j])
-{
-	count++;
-	break;
+	for (; ; s++)
+	{
+		if (*s == c)
+			return (s);
+		if (!*s)
+			return (0);
+	}
 }
-}
-	if (accept[j] == '\0')
-}
-{
-	return (count);
-}
-}
-	return (count);
-}
+
