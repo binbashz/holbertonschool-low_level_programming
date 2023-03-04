@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 #include <stddef.h>
 
 /**
@@ -20,7 +21,9 @@ char *_strstr(char *haystack, char *needle)
 	for (stk = 0; needle[stk]; stk++)
 {
 	if (needle[stk] != haystack[st + stk])
-		}
+	break;
+}	
+
 		if (!needle[stk])
 			return (haystack + st);
 	}
