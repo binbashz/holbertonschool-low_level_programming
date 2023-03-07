@@ -1,0 +1,60 @@
+#include "main.h"
+#include <unistd.h>
+#include <stdio.h>
+
+/**
+ * square_root_helper - Recursive helper function to search for the square root
+ * of n in the range [start, end] (inclusive).
+ *
+ * @n: The number to find the square root of.
+ * @start: The start of the current range.
+ * @end: The end of the current range.
+ *
+ * Return: The square root of n if it exists within the range [start, end],
+ * or -1 if n has no natural square root.
+ */
+	int square_root_helper(int n, int start, int end)
+{
+    /* Base case: n has no natural square root */
+	if (start > end)
+{
+	return (-1);
+	}
+
+    /* Calculate the middle of the current range */
+	int middle = (start + end) / 2;
+
+    /* Check if the square of the middle is equal to n */
+	int square = middle * middle;
+
+	if (square == n)
+{
+	return (middle);
+}
+
+    /* Recursively search either the left or right half of the range */
+	if (square < n)
+	{
+	/* Search the right half of the range */
+	return (square_root_helper(n, middle + 1, end));
+}
+	else
+{
+	/* Search the left half of the range */
+	return (square_root_helper(n, start, middle - 1));
+	}
+}
+
+/**
+ * _sqrt_recursion - Returns the natural square root of a number.
+ *
+ * @n: The number to find the square root of.
+ *
+ * Return: The natural square root of n if it exists, or -1 if n has no
+ * natural square root.
+ */
+	int _sqrt_recursion(int n)
+{
+	/* Call a helper function to search for the square root */
+	return (square_root_helper(n, 0, n));
+}
