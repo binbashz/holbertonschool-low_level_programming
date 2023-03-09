@@ -12,4 +12,5 @@ int main(int argc, char **argv)
 {
 	argc = 0;
 	printf("%s\n", argv[argc]);
-	re
+	return (0);
+}
