@@ -1,4 +1,6 @@
 
+#include "main.h"
+
 /**
   * main - prints all arguments passed, followed each by a new line.
   * @argc: Count number of arguments.
@@ -7,16 +9,9 @@
   * Return: 0.
   */
 
-
-#include "main.h"
-
-	int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
-	/* Go through all the arguments, starting with the first one. */
-	for (int i = 0; i < argc; i++)
-{
-	/*  Prints the argument followed by a newline character*/
-	printf("%s\n", argv[i]);
-}
+	for (argc = 0; argv[argc] != NULL; argc++)
+		printf("%s\n", argv[argc]);
 	return (0);
 }
