@@ -1,56 +1,35 @@
-
-/**
- * is_prime_number - check if an integer is a prime number
- *
- * @n: The integer to check
- *
- * Return: 1 if n is prime, 0 otherwise
- */
-
 #include "main.h"
-#include <stdio.h>
-#include <math.h>  /*header that provides mathematical functions & constants */
+/**
+ * aux - auxiliar function
+ * @x:  int
+ * @y:  int
+ * Return: function
+ */
 
-	int is_prime_number(int n)
+int aux(int x, int y)
 {
-	if (n <= 1) /* checks if n is less than or equal to 1 */
-{
-	return (0);    /* returns 0 (not prime) if it is */
-}
-
-	int sqrt_n = sqrt(n);
-	/* calculates the square root of n and assigns it to sqrt_n */
-
-	for (int i = 2; i <= sqrt_n; i++)
-		/* loops through all integers from 2 to sqrt_n */
-{
-	if (n % i == 0)  /*  checks if n is divisible by i */
-{
-	return (0);    /* returns 0 (not prime) if it is */
+	if (x < 2)
+	{
+		return (0);
 	}
-}
-
-	return (1);    /* returns 1 (prime) if no divisors are found*/
-
+	if (y == 1)
+	{
+		return (1);
+	}
+	if (x % y == 0)
+	{
+		return (0);
+	}
+	return (aux(x, y - 1));
 }
 
 /**
- * main - Entry point fot the program
- *
- * Return: Always 0
+ * is_prime_number - finds prime numbers
+ * @n: the number to check
+ * Return: 1 if prime, 0 otherwise
  */
-	int main(void)
-{
-	int n = 7;    /* test case*/
 
-	if (is_prime_number(n))
+int is_prime_number(int n)
 {
-	printf("%d is prime.\n", n);    /* prints message if n is prime */
-	}
-	else
-	{
-	printf("%d is not prime.\n", n);
-	}
-
-	return (0);
+	return (aux(n, n - 1));
 }
