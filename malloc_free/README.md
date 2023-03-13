@@ -1,25 +1,6 @@
-# Dynamic Memory Allocation in C using malloc(), calloc(), free() and realloc()
+# Dynamic Memory Allocation in C using malloc(), calloc(), free()
 
-Improve Article
 
-Save Article
-
-Like Article
-
--   Difficulty Level : [Easy](https://www.geeksforgeeks.org/easy/)
--   Last Updated : 23 Dec, 2022
-
--   Read
--   Discuss
--   Courses
--   Practice
--   Video
-
-Improve Article
-
-Save Article
-
-$('#practice-tab-main').show(),$('#video-tab-main').show(),$('#courses-tab-main').show(),companyTagsArray=JSON.parse('\[\]'),categoryTagsArray=JSON.parse('\[\]')
 
 Since C is a structured language, it has some fixed rules for programming. One of them includes changing the size of an array. An array is a collection of items stored at contiguous memory locations. 
 
@@ -34,7 +15,6 @@ This procedure is referred to as **Dynamic Memory Allocation in C**.
 Therefore, C **Dynamic Memory Allocation** can be defined as a procedure in which the size of a data structure (like Array) is changed during the runtime.  
 C provides some functions to achieve these tasks. There are 4 library functions provided by C defined under **<stdlib.h>** header file to facilitate dynamic memory allocation in C programming. They are: 
 
-<iframe id="google_ads_iframe_/27823234/GFG_InContent_Desktop_728x280_0" name="google_ads_iframe_/27823234/GFG_InContent_Desktop_728x280_0" title="3rd party ad content" width="728" height="280" scrolling="no" marginwidth="0" marginheight="0" frameborder="0" role="region" aria-label="Advertisement" tabindex="0" style="border: 0px; vertical-align: bottom;" data-load-complete="true" data-google-container-id="1"></iframe>
 
 1.  malloc()
 2.  calloc()
