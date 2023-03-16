@@ -1,66 +1,327 @@
+The **C Preprocessor** is not a part of the compiler, but is a separate step in the compilation process. In simple terms, a C Preprocessor is just a text substitution tool and it instructs the compiler to do required pre-processing before the actual compilation. We'll refer to the C Preprocessor as CPP.
 
+All preprocessor commands begin with a hash symbol (#). It must be the first nonblank character, and for readability, a preprocessor directive should begin in the first column. The following section lists down all the important preprocessor directives −
 
-### El preprocesador de C 
-es el preprocesador para el lenguaje de programación C. Es el primer programa invocado por el compilador y procesa directivas como #include, #define e #if. Estas directivas no son específicas de C. En realidad pueden ser usadas con cualquier tipo de archivo.
+| Sr.No. | Directive & Description |
+| --- | --- |
+| 1 | 
+**#define**
 
-El preprocesador utiliza 4 etapas denominadas Fases de traducción. Aunque alguna implementación puede elegir hacer alguna o todas las fases simultáneamente, debe comportarse como si fuesen ejecutadas paso a paso.
-La forma más común de usar el preprocesador es incluir otro archivo:
+Substitutes a preprocessor macro.
 
+ |
+| 2 | 
+
+**#include**
+
+Inserts a particular header from another file.
+
+ |
+| 3 | 
+
+**#undef**
+
+Undefines a preprocessor macro.
+
+ |
+| 4 | 
+
+**#ifdef**
+
+Returns true if this macro is defined.
+
+ |
+| 5 | 
+
+**#ifndef**
+
+Returns true if this macro is not defined.
+
+ |
+| 6 | 
+
+**#if**
+
+Tests if a compile time condition is true.
+
+ |
+| 7 | 
+
+**#else**
+
+The alternative for #if.
+
+ |
+| 8 | 
+
+**#elif**
+
+#else and #if in one statement.
+
+ |
+| 9 | 
+
+**#endif**
+
+Ends preprocessor conditional.
+
+ |
+| 10 | 
+
+**#error**
+
+Prints error message on stderr.
+
+ |
+| 11 | 
+
+**#pragma**
+
+Issues special commands to the compiler, using a standardized method.
+
+ |
+
+## Preprocessors Examples
+
+Analyze the following examples to understand various directives.
+
+```
+#define MAX_ARRAY_LENGTH 20
+
+```
+
+This directive tells the CPP to replace instances of MAX\_ARRAY\_LENGTH with 20. Use _#define_ for constants to increase readability.
+
+```
+#include <stdio.h>
+#include "myheader.h"
+```
+
+These directives tell the CPP to get stdio.h from **System Libraries** and add the text to the current source file. The next line tells CPP to get **myheader.h** from the local directory and add the content to the current source file.
+
+```
+#undef  FILE_SIZE
+#define FILE_SIZE 42
+```
+
+It tells the CPP to undefine existing FILE\_SIZE and define it as 42.
+
+```
+#ifndef MESSAGE
+   #define MESSAGE "You wish!"
+#endif
+```
+
+It tells the CPP to define MESSAGE only if MESSAGE isn't already defined.
+
+```
+#ifdef DEBUG
+   /* Your debugging statements here */
+#endif
+```
+
+It tells the CPP to process the statements enclosed if DEBUG is defined. This is useful if you pass the _\-DDEBUG_ flag to the gcc compiler at the time of compilation. This will define DEBUG, so you can turn debugging on and off on the fly during compilation.
+
+## Predefined Macros
+
+ANSI C defines a number of macros. Although each one is available for use in programming, the predefined macros should not be directly modified.
+
+| Sr.No. | Macro & Description |
+| --- | --- |
+| 1 | 
+**\_\_DATE\_\_**
+
+The current date as a character literal in "MMM DD YYYY" format.
+
+ |
+| 2 | 
+
+**\_\_TIME\_\_**
+
+The current time as a character literal in "HH:MM:SS" format.
+
+ |
+| 3 | 
+
+**\_\_FILE\_\_**
+
+This contains the current filename as a string literal.
+
+ |
+| 4 | 
+
+**\_\_LINE\_\_**
+
+This contains the current line number as a decimal constant.
+
+ |
+| 5 | 
+
+**\_\_STDC\_\_**
+
+Defined as 1 when the compiler complies with the ANSI standard.
+
+ |
+
+Let's try the following example −
+
+[Live Demo](http://tpcg.io/BMJM0C)
+
+```
 #include <stdio.h>
 
-int main (void)
-{
-    printf ("¡Hola Mundo!\n");
-    return 0;
+int main() {
+
+   printf("File :%s\n", __FILE__ );
+   printf("Date :%s\n", __DATE__ );
+   printf("Time :%s\n", __TIME__ );
+   printf("Line :%d\n", __LINE__ );
+   printf("ANSI :%d\n", __STDC__ );
+
 }
-El preprocesador reemplaza la línea #include <stdio.h> con el archivo de cabecera del sistema con ese nombre. En dicha cabecera se declara, entre otras cosas, la función printf(). Más concretamente donde se pone la directiva #include se sustituirá por el contenido completo del archivo 'stdio.h'.
+```
 
-También puede escribirse usando dobles comillas: #include "stdio.h". Originalmente esta distinción conseguía diferenciar entre los archivos de cabecera del sistema (<>) y los de usuario (""). Los compiladores de C y los entornos de desarrollo actuales disponen de facilidades para indicar dónde se encuentran los distintos archivos de cabecera. Sin embargo se sigue recomendando usar la misma nomenclatura por cuestiones de claridad en el código. La localización de los archivos de cabecera pueden ser indicados desde la línea de comandos o desde un archivo makefile para hacer el código más portable.
+When the above code in a file **test.c** is compiled and executed, it produces the following result −
 
-Se puede utilizar cualquier extensión para los archivos de cabecera. Pero, por convención, se utiliza la extensión .h para los archivos de cabecera y .c para los archivos que no son incluidos por ningún otro. También pueden encontrarse otras extensiones. Por ejemplo, los archivos con extensión .def suelen ser archivos cuyo contenido está diseñado para ser incluido muchas veces.
+```
+File :test.c
+Date :Jun 2 2012
+Time :03:36:24
+Line :8
+ANSI :1
 
-#include normalmente obliga a usar protectores de #include o la directiva #pragma once para prevenir la doble inclusión, porque si se incluye más de 1 vez el mismo archivo, (dependiendo del contenido) puede causar que se intente declarar varias veces las mismas funciones o tipos de variable, lo que va a generar un error al compilar, esto se intenta prevenir de la siguiente forma:
+```
 
-#ifndef __ARCHIVO_H__
-#define __ARCHIVO_H__
+## Preprocessor Operators
 
-/*... declaraciones de funciones, etc. ...*/
+The C preprocessor offers the following operators to help create macros −
 
+### The Macro Continuation (\\) Operator
+
+A macro is normally confined to a single line. The macro continuation operator (\\) is used to continue a macro that is too long for a single line. For example −
+
+```
+#define  message_for(a, b)  \
+   printf(#a " and " #b ": We love you!\n")
+```
+
+### The Stringize (#) Operator
+
+The stringize or number-sign operator ( '#' ), when used within a macro definition, converts a macro parameter into a string constant. This operator may be used only in a macro having a specified argument or parameter list. For example −
+
+[Live Demo](http://tpcg.io/qLYOKm)
+
+```
+#include <stdio.h>
+
+#define  message_for(a, b)  \
+   printf(#a " and " #b ": We love you!\n")
+
+int main(void) {
+   message_for(Carole, Debra);
+   return 0;
+}
+```
+
+When the above code is compiled and executed, it produces the following result −
+
+```
+Carole and Debra: We love you!
+
+```
+
+### The Token Pasting (##) Operator
+
+The token-pasting operator (##) within a macro definition combines two arguments. It permits two separate tokens in the macro definition to be joined into a single token. For example −
+
+[Live Demo](http://tpcg.io/2ZlJsc)
+
+```
+#include <stdio.h>
+
+#define tokenpaster(n) printf ("token" #n " = %d", token##n)
+
+int main(void) {
+   int token34 = 40;
+   tokenpaster(34);
+   return 0;
+}
+```
+
+When the above code is compiled and executed, it produces the following result −
+
+```
+token34 = 40
+
+```
+
+It happened so because this example results in the following actual output from the preprocessor −
+
+```
+printf ("token34 = %d", token34);
+```
+
+This example shows the concatenation of token##n into token34 and here we have used both **stringize** and **token-pasting**.
+
+### The Defined() Operator
+
+The preprocessor **defined** operator is used in constant expressions to determine if an identifier is defined using #define. If the specified identifier is defined, the value is true (non-zero). If the symbol is not defined, the value is false (zero). The defined operator is specified as follows −
+
+[Live Demo](http://tpcg.io/Fwp5AX)
+
+```
+#include <stdio.h>
+
+#if !defined (MESSAGE)
+   #define MESSAGE "You wish!"
 #endif
-Como resultado, al intentar inclurse el archivo por segunda vez, la operación "ifndef" va a dar falso porque __ARCHIVO_H__ ya estaba definido de la primera vez que se incluyó, y a consecuencia se saltea todo el bloque hasta llegar al "endif" que suele estar al final del archivo.
 
-Compilación condicional
-Las directivas #ifdef, #ifndef, #else, #elif y #endif pueden usarse para realizar compilaciones condicionales.
+int main(void) {
+   printf("Here is the message: %s\n", MESSAGE);  
+   return 0;
+}
+```
 
-#define __WINDOWS__
+When the above code is compiled and executed, it produces the following result −
 
-#ifdef __WINDOWS__
-#include <windows.h>
-#else
-#include <unistd.h>
-#endif
-La primera línea define una macro __WINDOWS__. Las macros pueden estar definidas por el compilador, se pueden especificar en la línea de comandos al compilador o pueden controlar la compilación del programa desde un archivo makefile.
+```
+Here is the message: You wish!
 
-El código siguiente comprueba si la macro __WINDOWS__ está definida. Si es así, como en el ejemplo, se incluye el archivo <windows.h>, en caso contrario, se incluye <unistd.h>.
+```
 
-Ejemplos de otros usos
-Como el preprocesador puede invocarse independientemente del proceso de compilación de código fuente también puede utilizarse como un preprocesador de propósito general para otros tipos de procesamiento de textos. Ver Preprocesadores de propósito general para ver otros ejemplos.
+## Parameterized Macros
 
-Definición de macros y expansión
-Hay dos tipos de macros: las que son como objetos y las que son como funciones. Las que se asemejan a funciones toman parámetros mientras que las que se asemejan a objetos no. La forma de definir un identificador como una macro de cada tipo es, respectivamente:
+One of the powerful functions of the CPP is the ability to simulate functions using parameterized macros. For example, we might have some code to square a number as follows −
 
-#define <identificador> <lista de tokens a reemplazar>
-#define <identificador>(<lista de parámetros>) <lista de tokens a reemplazar>
-Hay que tener en cuenta que no hay ningún espacio entre el identificador de la macro y el paréntesis izquierdo.
+```
+int square(int x) {
+   return x * x;
+}
+```
 
-Cada vez que el identificador aparezca en el código fuente será reemplazado por la lista de tokens. Incluso si está vacía. Los identificadores declarados como funciones solo se reemplazan cuando se invoca con los parámetros con los que se definió la macro.
+We can rewrite above the code using a macro as follows −
 
-Las macros tipo objetos se usan normalmente como parte de prácticas de buena programación para crear nombres simbólicos para constantes. Por ejemplo:
+```
+#define square(x) ((x) * (x))
+```
 
-#define PI 3.14159
-en vez de utilizar el número tal cual en el código.
+Macros with arguments must be defined using the **#define** directive before they can be used. The argument list is enclosed in parentheses and must immediately follow the macro name. Spaces are not allowed between the macro name and open parenthesis. For example −
 
-Un ejemplo de macro actuando como función es:
+[Live Demo](http://tpcg.io/gXEa63)
 
-#define RADAGRA(x) ((x) * 57.29578)
-Esta macro define la forma de convertir radianes a grados. Después podemos escribir RADAGRA(34). El preprocesador sustituirá la llamada a la macro por la multiplicación definida antes. Las macros aquí mostradas están escritas en mayúsculas. Esto permite distinguir fácilmente entre macros y funciones compiladas en el código fuente.
+```
+#include <stdio.h>
+
+#define MAX(x,y) ((x) > (y) ? (x) : (y))
+
+int main(void) {
+   printf("Max between 20 and 10 is %d\n", MAX(10, 20));  
+   return 0;
+}
+```
+
+When the above code is compiled and executed, it produces the following result −
+
+```
+Max between 20 and 10 is 20
+```
