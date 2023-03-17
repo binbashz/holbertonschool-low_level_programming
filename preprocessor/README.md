@@ -1,5 +1,5 @@
 
-=======
+
 The **C Preprocessor** is not a part of the compiler, but is a separate step in the compilation process. In simple terms, a C Preprocessor is just a text substitution tool and it instructs the compiler to do required pre-processing before the actual compilation. We'll refer to the C Preprocessor as CPP.
 
 All preprocessor commands begin with a hash symbol (#). It must be the first nonblank character, and for readability, a preprocessor directive should begin in the first column. The following section lists down all the important preprocessor directives −
@@ -330,4 +330,3 @@ Max between 20 and 10 is 20
 
 
 ![](https://mitcodershelp.files.wordpress.com/2017/01/wp-1483634457162.jpeg)
->>>>>>> a4ebc0bd4768faca20236a0e80c920c4bab1ae2b
