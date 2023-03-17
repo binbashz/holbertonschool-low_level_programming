@@ -6,7 +6,7 @@
  * create_array - Crea un array de caracteres y lo inicializa con un carácter
  * dado.
  * @size: Tamaño del array a crear.
- * @c: Carácter con el que inicializar el array.
+ * @c: Carácter con el que inicializar el array
  *
  * Return: Puntero al array creado, o NULL si falla.
  */
