@@ -15,8 +15,7 @@ Like its C counterpart, the struct data type in [C#](https://en.wikipedia.org/wi
 
 This differs from C++, where classes or structs can be statically allocated or dynamically allocated either on the stack (similar to C#) or on the heap, with an explicit pointer. In [C++](https://en.wikipedia.org/wiki/C%2B%2B "C++"), the only difference between a struct and a [class](https://en.wikipedia.org/wiki/C%2B%2B_classes "C++ classes") is that the members and base classes of a struct are [public](https://en.wikipedia.org/wiki/Access_modifiers "Access modifiers") by default. (A class defined with the `class` keyword has [private](https://en.wikipedia.org/wiki/Access_modifiers "Access modifiers") members and base classes by default.)
 
-## Declaration\[[edit](https://en.wikipedia.org/w/index.php?title=Struct_(C_programming_language)&action=edit&section=2 "Edit section: Declaration")\]
-
+## Declaration
 The general syntax for a struct declaration in C is:
 
 ```
@@ -40,7 +39,7 @@ typedef struct tag_name {
 
 ```
 
-## Initialization\[[edit](https://en.wikipedia.org/w/index.php?title=Struct_(C_programming_language)&action=edit&section=3 "Edit section: Initialization")\]
+## Initialization
 
 There are three ways to initialize a structure. For the `struct` type
 
@@ -79,7 +78,7 @@ struct point q = p;
 
 ```
 
-## Assignment\[[edit](https://en.wikipedia.org/w/index.php?title=Struct_(C_programming_language)&action=edit&section=4 "Edit section: Assignment")\]
+## Assignment
 
 A struct may be assigned to another struct. A compiler might use `memcpy()` to perform such an assignment.
 
@@ -99,7 +98,7 @@ int main(void)
 
 ```
 
-## Pointers to struct\[[edit](https://en.wikipedia.org/w/index.php?title=Struct_(C_programming_language)&action=edit&section=5 "Edit section: Pointers to struct")\]
+## Pointers to struct
 
 Pointers can be used to refer to a `struct` by its address. This is useful for passing structs to a function. The pointer can be [dereferenced](https://en.wikipedia.org/wiki/Dereference_operator "Dereference operator") using the `*` operator. The `->` operator dereferences the pointer to struct (left operand) and then accesses the value of a member of the struct (right operand).
 
