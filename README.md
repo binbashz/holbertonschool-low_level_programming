@@ -1,41 +1,43 @@
-Low-level programming 
+### Low-level programming 
 
-Curriculum
+#### Curriculum
 
 
-Hello world
+#### Hello world
 
-Variables, if, else and while
+#### Variables, if, else and while
 
-Functions and nested loops
 
-Pointers, arrays and strings
+#### Functions and nested loops
 
-Recursion
+#### Pointers, arrays and strings
 
-Static libraries
+#### Recursion
 
-Argc and argv
+#### Static libraries
 
-Malloc and free
+#### Argc and argv
 
-Preprocessor
+#### Malloc and free
 
-Structures and typedef
 
-Function pointers
+#### Preprocessor
 
-Variadic functions
+#### Structures and typedef
 
-Makefiles
+#### Function pointers
 
-Singly linked lists
+#### Variadic functions
 
-Bit manipulation
+#### Makefiles
 
-File I/O
+#### Singly linked lists
 
-Hash tables
+#### Bit manipulation
 
-Search algorithms
+### File I/O
+
+#### Hash tables
+
+#### Search algorithms
 
