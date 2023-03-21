@@ -1,645 +1,312 @@
-Getting Started
-Why do Makefiles exist?
-Makefiles are used to help decide which parts of a large program need to be recompiled. In the vast majority of cases, C or C++ files are compiled. Other languages typically have their own tools that serve a similar purpose as Make. Make can also be used beyond compilation too, when you need a series of instructions to run depending on what files have changed. This tutorial will focus on the C/C++ compilation use case.
+## Makefiles
 
-Here's an example dependency graph that you might build with Make. If any file's dependencies changes, then the file will get recompiled:
+If you want to run or update a task when certain files are updated, the `make` utility can come in handy. The `make` utility requires a file, `Makefile` (or `makefile`), which defines set of tasks to be executed. You may have used `make` to compile a program from source code. Most open source projects use `make` to compile a final executable binary, which can then be installed using `make install`.
 
+In this article, we'll explore `make` and `Makefile` using basic and advanced examples. Before you start, ensure that `make` is installed in your system.
 
-What alternatives are there to Make?
-Popular C/C++ alternative build systems are SCons, CMake, Bazel, and Ninja. Some code editors like Microsoft Visual Studio have their own built in build tools. For Java, there's Ant, Maven, and Gradle. Other languages like Go and Rust have their own build tools.
+## Basic examples
 
-Interpreted languages like Python, Ruby, and Javascript don't require an analogue to Makefiles. The goal of Makefiles is to compile whatever files need to be compiled, based on what files have changed. But when files in interpreted languages change, nothing needs to get recompiled. When the program runs, the most recent version of the file is used.
+Let's start by printing the classic "Hello World" on the terminal. Create a empty directory `myproject` containing a file `Makefile` with this content:
 
-The versions and types of Make
-There are a variety of implementations of Make, but most of this guide will work on whatever version you're using. However, it's specifically written for GNU Make, which is the standard implementation on Linux and MacOS. All the examples work for Make versions 3 and 4, which are nearly equivalent other than some esoteric differences.
+```bash
+say_hello:
+        echo "Hello World"
+```
 
-Running the Examples
-To run these examples, you'll need a terminal and "make" installed. For each example, put the contents in a file called Makefile, and in that directory run the command make. Let's start with the simplest of Makefiles:
+Now run the file by typing `make` inside the directory `myproject`. The output will be:
 
-hello:
-	echo "Hello, World"
-Note: Makefiles must be indented using TABs and not spaces or make will fail.
-
-Here is the output of running the above example:
-
+```bash
 $ make
-echo "Hello, World"
-Hello, World
-That's it! If you're a bit confused, here's a video that goes through these steps, along with describing the basic structure of Makefiles.
+echo "Hello World"
+Hello World
+```
 
+In the example above, `say_hello` behaves like a function name, as in any programming language. This is called the _target_. The _prerequisites_ or _dependencies_ follow the target. For the sake of simplicity, we have not defined any prerequisites in this example. The command `echo "Hello World"` is called the _recipe_. The _recipe_ uses _prerequisites_ to make a _target_. The target, prerequisites, and recipes together make a _rule_.
 
-Makefile Syntax
-A Makefile consists of a set of rules. A rule generally looks like this:
+To summarize, below is the syntax of a typical rule:
 
-targets: prerequisites
-	command
-	command
-	command
-The targets are file names, separated by spaces. Typically, there is only one per rule.
-The commands are a series of steps typically used to make the target(s). These need to start with a tab character, not spaces.
-The prerequisites are also file names, separated by spaces. These files need to exist before the commands for the target are run. These are also called dependencies
-The essence of Make
-Let's start with a hello world example:
+```bash
+target: prerequisites
+<TAB> recipe
+```
 
-hello:
-	echo "Hello, World"
-	echo "This line will always print, because the file hello does not exist."
-There's already a lot to take in here. Let's break it down:
+As an example, a target might be a binary file that depends on prerequisites (source files). On the other hand, a prerequisite can also be a target that depends on other dependencies:
 
-We have one target called hello
-This target has two commands
-This target has no prerequisites
-We'll then run make hello. As long as the hello file does not exist, the commands will run. If hello does exist, no commands will run.
+```bash
+final_target: sub_target final_target.c
+Recipe_to_create_final_target
 
-It's important to realize that I'm talking about hello as both a target and a file. That's because the two are directly tied together. Typically, when a target is run (aka when the commands of a target are run), the commands will create a file with the same name as the target. In this case, the hello target does not create the hello file.
+sub_target: sub_target.c
+Recipe_to_create_sub_target
+```
 
-Let's create a more typical Makefile - one that compiles a single C file. But before we do, make a file called blah.c that has the following contents:
+It is not necessary for the target to be a file; it could be just a name for the recipe, as in our example. We call these "phony targets."
 
-// blah.c
-int main() { return 0; }
-Then create the Makefile (called Makefile, as always):
+Going back to the example above, when `make` was executed, the entire command `echo "Hello World"` was displayed, followed by actual command output. We often don't want that. To suppress echoing the actual command, we need to start `echo` with `@`:
 
-blah:
-	cc blah.c -o blah
-This time, try simply running make. Since there's no target supplied as an argument to the make command, the first target is run. In this case, there's only one target (blah). The first time you run this, blah will be created. The second time, you'll see make: 'blah' is up to date. That's because the blah file already exists. But there's a problem: if we modify blah.c and then run make, nothing gets recompiled.
+```bash
+say_hello:
+        @echo "Hello World"
+```
 
-We solve this by adding a prerequisite:
+Now try to run `make` again. The output should display only this:
 
-blah: blah.c
-	cc blah.c -o blah
-When we run make again, the following set of steps happens:
+```bash
+$ make
+Hello World
+```
 
-The first target is selected, because the first target is the default target
-This has a prerequisite of blah.c
-Make decides if it should run the blah target. It will only run if blah doesn't exist, or blah.c is newer than blah
-This last step is critical, and is the essence of make. What it's attempting to do is decide if the prerequisites of blah have changed since blah was last compiled. That is, if blah.c is modified, running make should recompile the file. And conversely, if blah.c has not changed, then it should not be recompiled.
+Let's add a few more phony targets: `generate` and `clean` to the `Makefile`:
 
-To make this happen, it uses the filesystem timestamps as a proxy to determine if something has changed. This is a reasonable heuristic, because file timestamps typically will only change if the files are modified. But it's important to realize that this isn't always the case. You could, for example, modify a file, and then change the modified timestamp of that file to something old. If you did, Make would incorrectly guess that the file hadn't changed and thus could be ignored.
+```bash
+say_hello:
+        @echo "Hello World"
 
-Whew, what a mouthful. Make sure that you understand this. It's the crux of Makefiles, and might take you a few minutes to properly understand. Play around with the above examples or watch the video above if things are still confusing.
-
-More quick examples
-The following Makefile ultimately runs all three targets. When you run make in the terminal, it will build a program called blah in a series of steps:
-
-Make selects the target blah, because the first target is the default target
-blah requires blah.o, so make searches for the blah.o target
-blah.o requires blah.c, so make searches for the blah.c target
-blah.c has no dependencies, so the echo command is run
-The cc -c command is then run, because all of the blah.o dependencies are finished
-The top cc command is run, because all the blah dependencies are finished
-That's it: blah is a compiled c program
-blah: blah.o
-	cc blah.o -o blah # Runs third
-
-blah.o: blah.c
-	cc -c blah.c -o blah.o # Runs second
-
-# Typically blah.c would already exist, but I want to limit any additional required files
-blah.c:
-	echo "int main() { return 0; }" > blah.c # Runs first
-If you delete blah.c, all three targets will be rerun. If you edit it (and thus change the timestamp to newer than blah.o), the first two targets will run. If you run touch blah.o (and thus change the timestamp to newer than blah), then only the first target will run. If you change nothing, none of the targets will run. Try it out!
-
-This next example doesn't do anything new, but is nontheless a good additional example. It will always run both targets, because some_file depends on other_file, which is never created.
-
-some_file: other_file
-	echo "This will always run, and runs second"
-	touch some_file
-
-other_file:
-	echo "This will always run, and runs first"
-Make clean
-clean is often used as a target that removes the output of other targets, but it is not a special word in Make. You can run make and make clean on this to create and delete some_file.
-
-Note that clean is doing two new things here:
-
-It's a target that is not first (the default), and not a prerequisite. That means it'll never run unless you explicitly call make clean
-It's not intended to be a filename. If you happen to have a file named clean, this target won't run, which is not what we want. See .PHONY later in this tutorial on how to fix this
-some_file: 
-	touch some_file
+generate:
+@echo "Creating empty text files..."
+touch file-{1..10}.txt
 
 clean:
-	rm -f some_file
-Variables
-Variables can only be strings. You'll typically want to use :=, but = also works. See Variables Pt 2.
+@echo "Cleaning up..."
+rm *.txt
+```
 
-Here's an example of using variables:
+If we try to run `make` after the changes, only the target `say_hello` will be executed. That's because only the first target in the makefile is the default target. Often called the _default goal_, this is the reason you will see `all` as the first target in most projects. It is the responsibility of `all` to call other targets. We can override this behavior using a special phony target called `.DEFAULT_GOAL`.
 
-files := file1 file2
-some_file: $(files)
-	echo "Look at this variable: " $(files)
-	touch some_file
+Let's include that at the beginning of our makefile:
 
-file1:
-	touch file1
-file2:
-	touch file2
+```bash
+.DEFAULT_GOAL := generate
+```
+
+This will run the target `generate` as the default:
+
+```bash
+$ make
+Creating empty text files...
+touch file-{1..10}.txt
+```
+
+As the name suggests, the phony target `.DEFAULT_GOAL` can run only one target at a time. This is why most makefiles include `all` as a target that can call as many targets as needed.
+
+Let's include the phony target `all` and remove `.DEFAULT_GOAL`:
+
+```bash
+all: say_hello generate
+
+say_hello:
+@echo "Hello World"
+
+generate:
+@echo "Creating empty text files..."
+touch file-{1..10}.txt
 
 clean:
-	rm -f file1 file2 some_file
-Single or double quotes have no meaning to Make. They are simply characters that are assigned to the variable. Quotes are useful to shell/bash, though, and you need them in commands like printf. In this example, the two commands behave the same:
+@echo "Cleaning up..."
+rm *.txt
+```
 
-a := one two # a is assigned to the string "one two"
-b := 'one two' # Not recommended. b is assigned to the string "'one two'"
+Before running `make`, let's include another special phony target, `.PHONY`, where we define all the targets that are not files. `make` will run its recipe regardless of whether a file with that name exists or what its last modification time is. Here is the complete makefile:
+
+```bash
+.PHONY: all say_hello generate clean
+
+all: say_hello generate
+
+say_hello:
+@echo "Hello World"
+
+generate:
+@echo "Creating empty text files..."
+touch file-{1..10}.txt
+
+clean:
+@echo "Cleaning up..."
+rm *.txt
+```
+
+The `make` should call `say_hello` and `generate`:
+
+```bash
+$ make
+Hello World
+Creating empty text files...
+touch file-{1..10}.txt
+```
+
+It is a good practice not to call `clean` in `all` or put it as the first target. `clean` should be called manually when cleaning is needed as a first argument to `make`:
+
+```bash
+$ make clean
+Cleaning up...
+rm *.txt
+```
+
+Now that you have an idea of how a basic makefile works and how to write a simple makefile, let's look at some more advanced examples.
+
+## Advanced examples
+
+### Variables
+
+
+
+In the above example, most target and prerequisite values are hard-coded, but in real projects, these are replaced with variables and patterns.
+
+The simplest way to define a variable in a makefile is to use the `=` operator. For example, to assign the command `gcc` to a variable `CC`:
+
+```
+CC = gcc
+```
+
+This is also called a _recursive expanded variable_, and it is used in a rule as shown below:
+
+```bash
+hello: hello.c
+    ${CC} hello.c -o hello
+```
+
+As you may have guessed, the recipe expands as below when it is passed to the terminal:
+
+```
+gcc hello.c -o hello
+```
+
+Both `${CC}` and `$(CC)` are valid references to call `gcc`. But if one tries to reassign a variable to itself, it will cause an infinite loop. Let's verify this:
+
+```bash
+CC = gcc
+CC = ${CC}
+
 all:
-	printf '$a'
-	printf $b
-Reference variables using either ${} or $()
+    @echo ${CC}
+```
 
-x := dude
+Running `make` will result in:
+
+```bash
+$ make
+Makefile:8: *** Recursive variable 'CC' references itself (eventually).  Stop.
+```
+
+To avoid this scenario, we can use the `:=` operator (this is also called the _simply expanded variable_). We should have no problem running the makefile below:
+
+```bash
+CC := gcc
+CC := ${CC}
 
 all:
-	echo $(x)
-	echo ${x}
+    @echo ${CC}
+```
 
-	# Bad practice, but works
-	echo $x 
-Targets
-The all target
-Making multiple targets and you want all of them to run? Make an all target. Since this is the first rule listed, it will run by default if make is called without specifying a target.
+### Patterns and functions
 
-all: one two three
+The following makefile can compile all C programs by using variables, patterns, and functions. Let's explore it line by line:
 
-one:
-	touch one
-two:
-	touch two
-three:
-	touch three
+```text
+# Usage:
+# make        # compile all binary
+# make clean  # remove ALL binaries and objects
 
-clean:
-	rm -f one two three
-Multiple targets
-When there are multiple targets for a rule, the commands will be run for each target. $@ is an automatic variable that contains the target name.
+.PHONY = all clean
 
-all: f1.o f2.o
+CC = gcc# compiler to use
 
-f1.o f2.o:
-	echo $@
-# Equivalent to:
-# f1.o:
-#	 echo f1.o
-# f2.o:
-#	 echo f2.o
-Automatic Variables and Wildcards
-* Wildcard
-Both * and % are called wildcards in Make, but they mean entirely different things. * searches your filesystem for matching filenames. I suggest that you always wrap it in the wildcard function, because otherwise you may fall into a common pitfall described below.
+LINKERFLAG = -lm
 
-# Print out file information about every .c file
-print: $(wildcard *.c)
-	ls -la  $?
-* may be used in the target, prerequisites, or in the wildcard function.
+SRCS := $(wildcard *.c)
+BINS := $(SRCS:%.c=%)
 
-Danger: * may not be directly used in a variable definitions
+all: ${BINS}
 
-Danger: When * matches no files, it is left as it is (unless run in the wildcard function)
+%: %.o
+@echo "Checking.."
+${CC} ${LINKERFLAG} $< -o $@
 
-thing_wrong := *.o # Don't do this! '*' will not get expanded
-thing_right := $(wildcard *.o)
-
-all: one two three four
-
-# Fails, because $(thing_wrong) is the string "*.o"
-one: $(thing_wrong)
-
-# Stays as *.o if there are no files that match this pattern :(
-two: *.o 
-
-# Works as you would expect! In this case, it does nothing.
-three: $(thing_right)
-
-# Same as rule three
-four: $(wildcard *.o)
-% Wildcard
-% is really useful, but is somewhat confusing because of the variety of situations it can be used in.
-
-When used in "matching" mode, it matches one or more characters in a string. This match is called the stem.
-When used in "replacing" mode, it takes the stem that was matched and replaces that in a string.
-% is most often used in rule definitions and in some specific functions.
-See these sections on examples of it being used:
-
-Static Pattern Rules
-Pattern Rules
-String Substitution
-The vpath Directive
-Automatic Variables
-There are many automatic variables, but often only a few show up:
-
-hey: one two
-	# Outputs "hey", since this is the target name
-	echo $@
-
-	# Outputs all prerequisites newer than the target
-	echo $?
-
-	# Outputs all prerequisites
-	echo $^
-
-	touch hey
-
-one:
-	touch one
-
-two:
-	touch two
+%.o: %.c
+@echo "Creating object.."
+${CC} -c $<
 
 clean:
-	rm -f hey one two
-Fancy Rules
-Implicit Rules
-Make loves c compilation. And every time it expresses its love, things get confusing. Perhaps the most confusing part of Make is the magic/automatic rules that are made. Make calls these "implicit" rules. I don't personally agree with this design decision, and I don't recommend using them, but they're often used and are thus useful to know. Here's a list of implicit rules:
+@echo "Cleaning up..."
+rm -rvf *.o ${BINS}
+```
 
-Compiling a C program: n.o is made automatically from n.c with a command of the form $(CC) -c $(CPPFLAGS) $(CFLAGS) $^ -o $@
-Compiling a C++ program: n.o is made automatically from n.cc or n.cpp with a command of the form $(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $^ -o $@
-Linking a single object file: n is made automatically from n.o by running the command $(CC) $(LDFLAGS) $^ $(LOADLIBES) $(LDLIBS) -o $@
-The important variables used by implicit rules are:
+-   Lines starting with `#` are comments.
+    
+-   Line `.PHONY = all clean` defines phony targets `all` and `clean`.
+    
+-   Variable `LINKERFLAG` defines flags to be used with `gcc` in a recipe.
+    
+-   `SRCS := $(wildcard *.c)`: `$(wildcard pattern)` is one of the _functions for filenames_. In this case, all files with the `.c` extension will be stored in a variable `SRCS`.
+    
+-   `BINS := $(SRCS:%.c=%)`: This is called as _substitution reference_. In this case, if `SRCS` has values `'foo.c bar.c'`, `BINS` will have `'foo bar'`.
+    
+-   Line `all: ${BINS}`: The phony target `all` calls values in`${BINS}` as individual targets.
+    
+-   Rule:
+    
+    ```bash
+    %: %.o
+      @echo "Checking.."
+      ${CC} ${LINKERFLAG} $&lt; -o $@
+    ```
+    
+    Let's look at an example to understand this rule. Suppose `foo` is one of the values in `${BINS}`. Then `%` will match `foo`(`%` can match any target name). Below is the rule in its expanded form:
+    
+    ```bash
+    foo: foo.o
+      @echo "Checking.."
+      gcc -lm foo.o -o foo
+    ```
+    
+    As shown, `%` is replaced by `foo`. `$<` is replaced by `foo.o`. `$<` is patterned to match prerequisites and `$@` matches the target. This rule will be called for every value in `${BINS}`
+    
+-   Rule:
+    
+    ```bash
+    %.o: %.c
+      @echo "Creating object.."
+      ${CC} -c $&lt;
+    ```
+    
+    Every prerequisite in the previous rule is considered a target for this rule. Below is the rule in its expanded form:
+    
+    ```bash
+    foo.o: foo.c
+      @echo "Creating object.."
+      gcc -c foo.c
+    ```
+    
+-   Finally, we remove all binaries and object files in target `clean`.
+    
 
-CC: Program for compiling C programs; default cc
-CXX: Program for compiling C++ programs; default g++
-CFLAGS: Extra flags to give to the C compiler
-CXXFLAGS: Extra flags to give to the C++ compiler
-CPPFLAGS: Extra flags to give to the C preprocessor
-LDFLAGS: Extra flags to give to compilers when they are supposed to invoke the linker
-Let's see how we can now build a C program without ever explicitly telling Make how to do the compililation:
+Below is the rewrite of the above makefile, assuming it is placed in the directory having a single file `foo.c:`
 
-CC = gcc # Flag for implicit rules
-CFLAGS = -g # Flag for implicit rules. Turn on debug info
+```text
+# Usage:
+# make        # compile all binary
+# make clean  # remove ALL binaries and objects
 
-# Implicit rule #1: blah is built via the C linker implicit rule
-# Implicit rule #2: blah.o is built via the C compilation implicit rule, because blah.c exists
-blah: blah.o
+.PHONY = all clean
 
-blah.c:
-	echo "int main() { return 0; }" > blah.c
+CC = gcc# compiler to use
 
-clean:
-	rm -f blah*
-Static Pattern Rules
-Static pattern rules are another way to write less in a Makefile, but I'd say are more useful and a bit less "magic". Here's their syntax:
+LINKERFLAG = -lm
 
-targets...: target-pattern: prereq-patterns ...
-   commands
-The essence is that the given target is matched by the target-pattern (via a % wildcard). Whatever was matched is called the stem. The stem is then substituted into the prereq-pattern, to generate the target's prereqs.
+SRCS := foo.c
+BINS := foo
 
-A typical use case is to compile .c files into .o files. Here's the manual way:
+all: foo
 
-objects = foo.o bar.o all.o
-all: $(objects)
+foo: foo.o
+@echo "Checking.."
+gcc -lm foo.o -o foo
 
-# These files compile via implicit rules
 foo.o: foo.c
-bar.o: bar.c
-all.o: all.c
-
-all.c:
-	echo "int main() { return 0; }" > all.c
-
-%.c:
-	touch $@
+@echo "Creating object.."
+gcc -c foo.c
 
 clean:
-	rm -f *.c *.o all
-Here's the more efficient way, using a static pattern rule:
-
-objects = foo.o bar.o all.o
-all: $(objects)
-
-# These files compile via implicit rules
-# Syntax - targets ...: target-pattern: prereq-patterns ...
-# In the case of the first target, foo.o, the target-pattern matches foo.o and sets the "stem" to be "foo".
-# It then replaces the '%' in prereq-patterns with that stem
-$(objects): %.o: %.c
-
-all.c:
-	echo "int main() { return 0; }" > all.c
-
-%.c:
-	touch $@
-
-clean:
-	rm -f *.c *.o all
-Static Pattern Rules and Filter
-While I introduce functions later on, I'll foreshadow what you can do with them. The filter function can be used in Static pattern rules to match the correct files. In this example, I made up the .raw and .result extensions.
-
-obj_files = foo.result bar.o lose.o
-src_files = foo.raw bar.c lose.c
-
-all: $(obj_files)
-# Note: PHONY is important here. Without it, implicit rules will try to build the executable "all", since the prereqs are ".o" files.
-.PHONY: all 
-
-# Ex 1: .o files depend on .c files. Though we don't actually make the .o file.
-$(filter %.o,$(obj_files)): %.o: %.c
-	echo "target: $@ prereq: $<"
-
-# Ex 2: .result files depend on .raw files. Though we don't actually make the .result file.
-$(filter %.result,$(obj_files)): %.result: %.raw
-	echo "target: $@ prereq: $<" 
-
-%.c %.raw:
-	touch $@
-
-clean:
-	rm -f $(src_files)
-Pattern Rules
-Pattern rules are often used but quite confusing. You can look at them as two ways:
-
-A way to define your own implicit rules
-A simpler form of static pattern rules
-Let's start with an example first:
-
-# Define a pattern rule that compiles every .c file into a .o file
-%.o : %.c
-		$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
-Pattern rules contain a '%' in the target. This '%' matches any nonempty string, and the other characters match themselves. ‘%’ in a prerequisite of a pattern rule stands for the same stem that was matched by the ‘%’ in the target.
-
-Here's another example:
-
-# Define a pattern rule that has no pattern in the prerequisites.
-# This just creates empty .c files when needed.
-%.c:
-   touch $@
-Double-Colon Rules
-Double-Colon Rules are rarely used, but allow multiple rules to be defined for the same target. If these were single colons, a warning would be printed and only the second set of commands would run.
-
-all: blah
-
-blah::
-	echo "hello"
-
-blah::
-	echo "hello again"
-Commands and execution
-Command Echoing/Silencing
-Add an @ before a command to stop it from being printed
-You can also run make with -s to add an @ before each line
-
-all: 
-	@echo "This make line will not be printed"
-	echo "But this will"
-Command Execution
-Each command is run in a new shell (or at least the effect is as such)
-
-all: 
-	cd ..
-	# The cd above does not affect this line, because each command is effectively run in a new shell
-	echo `pwd`
-
-	# This cd command affects the next because they are on the same line
-	cd ..;echo `pwd`
-
-	# Same as above
-	cd ..; \
-	echo `pwd`
-Default Shell
-The default shell is /bin/sh. You can change this by changing the variable SHELL:
-
-SHELL=/bin/bash
-
-cool:
-	echo "Hello from bash"
-Double dollar sign
-If you want a string to have a dollar sign, you can use $$. This is how to use a shell variable in bash or sh.
-
-Note the differences between Makefile variables and Shell variables in this next example.
-
-make_var = I am a make variable
-all:
-	# Same as running "sh_var='I am a shell variable'; echo $sh_var" in the shell
-	sh_var='I am a shell variable'; echo $$sh_var
-
-	# Same as running "echo I am a make variable" in the shell
-	echo $(make_var)
-Error handling with -k, -i, and -
-Add -k when running make to continue running even in the face of errors. Helpful if you want to see all the errors of Make at once.
-Add a - before a command to suppress the error
-Add -i to make to have this happen for every command.
-
-one:
-	# This error will be printed but ignored, and make will continue to run
-	-false
-	touch one
-Interrupting or killing make
-Note only: If you ctrl+c make, it will delete the newer targets it just made.
-
-Recursive use of make
-To recursively call a makefile, use the special $(MAKE) instead of make because it will pass the make flags for you and won't itself be affected by them.
-
-new_contents = "hello:\n\ttouch inside_file"
-all:
-	mkdir -p subdir
-	printf $(new_contents) | sed -e 's/^ //' > subdir/makefile
-	cd subdir && $(MAKE)
-
-clean:
-	rm -rf subdir
-Export, environments, and recursive make
-When Make starts, it automatically creates Make variables out of all the environment variables that are set when it's executed.
-
-# Run this with "export shell_env_var='I am an environment variable'; make"
-all:
-	# Print out the Shell variable
-	echo $$shell_env_var
-
-	# Print out the Make variable
-	echo $(shell_env_var)
-The export directive takes a variable and sets it the environment for all shell commands in all the recipes:
-
-shell_env_var=Shell env var, created inside of Make
-export shell_env_var
-all:
-	echo $(shell_env_var)
-	echo $$shell_env_var
-As such, when you run the make command inside of make, you can use the export directive to make it accessible to sub-make commands. In this example, cooly is exported such that the makefile in subdir can use it.
-
-new_contents = "hello:\n\techo \$$(cooly)"
-
-all:
-	mkdir -p subdir
-	printf $(new_contents) | sed -e 's/^ //' > subdir/makefile
-	@echo "---MAKEFILE CONTENTS---"
-	@cd subdir && cat makefile
-	@echo "---END MAKEFILE CONTENTS---"
-	cd subdir && $(MAKE)
-
-# Note that variables and exports. They are set/affected globally.
-cooly = "The subdirectory can see me!"
-export cooly
-# This would nullify the line above: unexport cooly
-
-clean:
-	rm -rf subdir
-You need to export variables to have them run in the shell as well.
-
-one=this will only work locally
-export two=we can run subcommands with this
-
-all: 
-	@echo $(one)
-	@echo $$one
-	@echo $(two)
-	@echo $$two
-.EXPORT_ALL_VARIABLES exports all variables for you.
-
-.EXPORT_ALL_VARIABLES:
-new_contents = "hello:\n\techo \$$(cooly)"
-
-cooly = "The subdirectory can see me!"
-# This would nullify the line above: unexport cooly
-
-all:
-	mkdir -p subdir
-	printf $(new_contents) | sed -e 's/^ //' > subdir/makefile
-	@echo "---MAKEFILE CONTENTS---"
-	@cd subdir && cat makefile
-	@echo "---END MAKEFILE CONTENTS---"
-	cd subdir && $(MAKE)
-
-clean:
-	rm -rf subdir
-Arguments to make
-There's a nice list of options that can be run from make. Check out --dry-run, --touch, --old-file.
-
-You can have multiple targets to make, i.e. make clean run test runs the clean goal, then run, and then test.
-
-Variables Pt. 2
-Flavors and modification
-There are two flavors of variables:
-
-recursive (use =) - only looks for the variables when the command is used, not when it's defined.
-simply expanded (use :=) - like normal imperative programming -- only those defined so far get expanded
-# Recursive variable. This will print "later" below
-one = one ${later_variable}
-# Simply expanded variable. This will not print "later" below
-two := two ${later_variable}
-
-later_variable = later
-
-all: 
-	echo $(one)
-	echo $(two)
-Simply expanded (using :=) allows you to append to a variable. Recursive definitions will give an infinite loop error.
-
-one = hello
-# one gets defined as a simply expanded variable (:=) and thus can handle appending
-one := ${one} there
-
-all: 
-	echo $(one)
-?= only sets variables if they have not yet been set
-
-one = hello
-one ?= will not be set
-two ?= will be set
-
-all: 
-	echo $(one)
-	echo $(two)
-Spaces at the end of a line are not stripped, but those at the start are. To make a variable with a single space, use $(nullstring)
-
-with_spaces = hello   # with_spaces has many spaces after "hello"
-after = $(with_spaces)there
-
-nullstring =
-space = $(nullstring) # Make a variable with a single space.
-
-all: 
-	echo "$(after)"
-	echo start"$(space)"end
-An undefined variable is actually an empty string!
-
-all: 
-	# Undefined variables are just empty strings!
-	echo $(nowhere)
-Use += to append
-
-foo := start
-foo += more
-
-all: 
-	echo $(foo)
-String Substitution is also a really common and useful way to modify variables. Also check out Text Functions and Filename Functions.
-
-Command line arguments and override
-You can override variables that come from the command line by using override. Here we ran make with make option_one=hi
-
-# Overrides command line arguments
-override option_one = did_override
-# Does not override command line arguments
-option_two = not_override
-all: 
-	echo $(option_one)
-	echo $(option_two)
-List of commands and define
-The define directive is not a function, though it may look that way. I've seen it used so infrequently that I won't go into details, but it's mainly used for defining canned recipes and also pairs well with the eval function.
-
-define/endef simply creates a variable that is assigned to a list of commands. Note here that it's a bit different than having a semi-colon between commands, because each is run in a separate shell, as expected.
-
-one = export blah="I was set!"; echo $$blah
-
-define two
-export blah="I was set!"
-echo $$blah
-endef
-
-all: 
-	@echo "This prints 'I was set'"
-	@$(one)
-	@echo "This does not print 'I was set' because each command runs in a separate shell"
-	@$(two)
-Target-specific variables
-Variables can be assigned for specific targets
-
-all: one = cool
-
-all: 
-	echo one is defined: $(one)
-
-other:
-	echo one is nothing: $(one)
-Pattern-specific variables
-You can assign variables for specific target patterns
-
-%.c: one = cool
-
-blah.c: 
-	echo one is defined: $(one)
-
-other:
-	echo one is nothing: $(one)
-Conditional part of Makefiles
-Conditional if/else
-foo = ok
-
-all:
-ifeq ($(foo), ok)
-	echo "foo equals ok"
-else
-	echo "nope"
-endif
-Check if a variable is empty
-nullstring =
-foo = $(nullstring) # end of line; there is a space here
-
-all:
-ifeq ($(strip $(foo)),)
-	echo "foo is empty after being stripped"
-endif
-ifeq ($(nullstring),)
-	echo "nullstring doesn't even have spaces"
-endif
-Check if a variable is defined
-ifdef does not expand variable references; it just sees if something is defined at all
-
-bar =
-foo = $(bar)
-
-all:
-ifdef foo
-	echo "foo is defined"
-endif
-ifndef bar
-	echo "but bar is not"
-endif
-$(makeflags)
-This example shows you how to test make flags with findstring and MAKEFLAGS. Run this example with make -i to see it print out the echo statement.
-
+@echo "Cleaning up..."
+rm -rvf foo.o foo
+```
