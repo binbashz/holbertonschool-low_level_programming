@@ -9,6 +9,7 @@
  * @owner: owner of the puppy, thrid member
  */
 
+
 typedef struct dog
 {
 	char *name;
