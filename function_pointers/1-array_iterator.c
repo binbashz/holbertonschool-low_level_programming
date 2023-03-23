@@ -1,4 +1,4 @@
-#include <stddef.h>
+#include <stdio.h>
 
 /**
   * array_iterator - executes a function given as a parameter on each element.
@@ -9,10 +9,15 @@
   */
 
 void array_iterator(int *array, size_t size, void (*action)(int))
-	{
-	for (size_t i = 0; i < size; i++) /* iterar sobre cada elemento del arreglo */
-	{
-	action(array[i]); /* llamar la función "action" sobre el elemento actual*/
-}
+{
+	size_t i = 0;
 
+	if (array && action)
+	{
+		while (i < size)
+		{
+			action(array[i]);
+			i++;
+		}
 	}
+}
