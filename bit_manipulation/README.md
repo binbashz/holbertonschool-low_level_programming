@@ -12,7 +12,7 @@ Esto también se aplica a los operadores bit a bit, lo que significa que aunque 
 
 Todos estos operadores también están disponibles en [C++](https://en.wikipedia.org/wiki/C%2B%2B "C++") y muchos lenguajes [de la familia C.](https://en.wikipedia.org/wiki/C-family "familia C")
 
-## Operadores bit a bit \[ [editar](https://en.wikipedia.org/w/index.php?title=Bitwise_operations_in_C&action=edit&section=1 "Sección de edición: Operadores bit a bit") \]
+## Operadores bit a bit 
 
 C proporciona seis [operadores](https://en.wikipedia.org/wiki/Operators_in_C_and_C%2B%2B "Operadores en C y C++") para [la manipulación de bits](https://en.wikipedia.org/wiki/Bit_manipulation "Manipulación de bits") . <sup id="cite_ref-k&amp;r2e_1-0" class="reference"><a href="https://en.wikipedia.org/wiki/Bitwise_operations_in_C#cite_note-k&amp;r2e-1"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">[1]</font></font></a></sup>
 
@@ -25,7 +25,7 @@ C proporciona seis [operadores](https://en.wikipedia.org/wiki/Operators_in_C_and
 | `>>` | Giro a la derecha |
 | `~` | bit a bit NOT (complemento de uno) (unario) |
 
-### Bit a bit Y `&`\[ [editar](https://en.wikipedia.org/w/index.php?title=Bitwise_operations_in_C&action=edit&section=2 "Editar sección: bit a bit AND &") \]
+### Bit a bit Y `&`
 
 | un poco | poco b | `a & b`(a y B) |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ Por ejemplo, trabajando con un byte (el tipo char):
 
 El [bit más significativo](https://en.wikipedia.org/wiki/Most_significant_bit "Parte más significante") del primer número es 1 y el del segundo número también es 1 por lo que el [bit](https://en.wikipedia.org/wiki/Bit "Poco") más significativo del resultado es 1; en el segundo bit más significativo, el bit del segundo número es cero, por lo que tenemos el resultado como 0. <sup id="cite_ref-cprogramming.com_2-0" class="reference"><a href="https://en.wikipedia.org/wiki/Bitwise_operations_in_C#cite_note-cprogramming.com-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">[2]</font></font></a></sup>
 
-### Bit a bit O `|`\[ [editar](https://en.wikipedia.org/w/index.php?title=Bitwise_operations_in_C&action=edit&section=3 "Sección de edición: bit a bit O |") \]
+### Bit a bit O `|`
 
 | un poco | poco b | un | b (a O b) |
 | --- | --- | --- |
@@ -67,9 +67,9 @@ Similar a AND bit a bit, OR bit a bit realiza [una disyunción lógica](https://
 
 ```
 
-<sup id="cite_ref-cprogramming.com_2-1" class="reference"><a href="https://en.wikipedia.org/wiki/Bitwise_operations_in_C#cite_note-cprogramming.com-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">[2]</font></font></a></sup>
 
-### XOR bit a bit `^`\[ [editar](https://en.wikipedia.org/w/index.php?title=Bitwise_operations_in_C&action=edit&section=4 "Editar sección: Bitwise XOR ^") \]
+
+### XOR bit a bit `^`
 
 | un poco | poco b | `a ^ b`(a XOR b) |
 | --- | --- | --- |
@@ -88,7 +88,7 @@ El bit a bit XOR (o exclusivo) realiza una [disyunción exclusiva](https://en.wi
 
 ```
 
-## Operadores de desplazamiento \[ [editar](https://en.wikipedia.org/w/index.php?title=Bitwise_operations_in_C&action=edit&section=5 "Sección de edición: Operadores de turno") \]
+## Operadores de desplazamiento 
 
 Hay dos operadores de desplazamiento bit a bit. Ellos son
 
