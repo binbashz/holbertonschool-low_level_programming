@@ -95,7 +95,7 @@ Hay dos operadores de desplazamiento bit a bit. Ellos son
 -   Desplazamiento a la derecha ( `>>`)
 -   Desplazamiento a la izquierda ( `<<`)
 
-### Desplazamiento a la derecha `>>`\[ [editar](https://en.wikipedia.org/w/index.php?title=Bitwise_operations_in_C&action=edit&section=6 "Editar sección: Desplazamiento a la derecha >>") \]
+### Desplazamiento a la derecha `>>`
 
 El símbolo del operador de desplazamiento a la derecha es `>>`. Para su funcionamiento requiere de dos [operandos](https://en.wikipedia.org/wiki/Operand "operando") . Desplaza cada bit en su operando izquierdo a la derecha. El número que sigue al operador decide el número de lugares en los que se desplazan los bits (es decir, el operando derecho). Así, al hacerlo, `ch >> 3`todos los bits se desplazarán hacia la derecha tres lugares y así sucesivamente.
 
