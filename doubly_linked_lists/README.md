@@ -6,7 +6,12 @@ the same operations on a singly linked list, the operations are simpler and pote
  because there is no need to keep track of the previous node during traversal or no need to traverse the list to find the previous node, so that its link can be modified.
 
 
-
+## TAREA 0
+En una lista enlazada doble, cada nodo tiene dos punteros: uno que apunta al nodo anterior en la lista (denominado prev en la estructura dlistint_t),
+ y otro que apunta al siguiente nodo en la lista (denominado next en la estructura dlistint_t).
+ Esta estructura permite el acceso tanto al nodo anterior como al siguiente en la lista desde cualquier nodo, lo que ofrece mayor flexibilidad
+ en comparación con una lista enlazada simple, donde solo se tiene acceso al siguiente nodo. En el código proporcionado,
+ se utiliza el puntero next para recorrer la lista desde la cabeza (h) hasta el final de la lista, e imprimir el valor de cada nodo en el proceso.
 
 
 Doubly Linked List is a variation of Linked list in which navigation is possible in both ways, either forward and backward easily as compared to Single Linked List.
