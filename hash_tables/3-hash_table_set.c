@@ -18,10 +18,13 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 
 	index = key_index((const unsigned char *)key, ht->size);
 
-	end = ht->array[index]; /* Get the existing node at the index in the hash table */
+	end = ht->array[index];
+	/* Get the existing node at the index in the hash table */
 
-	if (end && strcmp(end->key, key) == 0) /* If a node with the same key already exists */
-		end->value = strdup(value); /* Update the value of the existing node with the new value */
+	if (end && strcmp(end->key, key) == 0)
+	/* If a node with the same key already exists */
+		end->value = strdup(value);
+	/* Update the value of the existing node with the new value */
 
 	else
 	{
@@ -35,14 +38,16 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 
 		if (!ht->array[index]) /* If the hash table index is empty */
 		{
-			ht->array[index] = new; /* Assign the new node as the first node at the index */
+			ht->array[index] = new;
+			/* Assign the new node as the first node at the index */
 			new->next = NULL;
 
 			return (1);
 		}
 
 		new->next = end; /* Assign the existing node as the next of the new node */
-		ht->array[index] = new; /* Update the hash table index with the new node as the first node */
+		ht->array[index] = new;
+		/* Update the hash table index with the new node as the first node */
 	}
 
 	return (1);
