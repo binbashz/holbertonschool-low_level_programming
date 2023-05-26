@@ -10,9 +10,10 @@
   *
   * Prints the current subarray being searched after each iteration.
   */
+
 int binary_search(int *arr, size_t size, int target)
 {
-	size_t left, right, mid;
+	size_t left, right, middle;
 
 	if (arr == NULL)
 		return (-1);
@@ -23,19 +24,19 @@ int binary_search(int *arr, size_t size, int target)
 	while (right >= left)
 	{
 		printf("Searching subarray: ");
-		for (mid = left; mid < right; mid++)
-			printf("%d, ", arr[mid]);
-		printf("%d\n", arr[mid]);
+		for (middle = left; middle < right; middle++)
+			printf("%d, ", arr[middle]);
+		printf("%d\n", arr[middle]);
 
-		mid = left + (right - left) / 2;
+		middle = left + (right - left) / 2;
 
-		if (arr[mid] == target)
-			return (mid);
+		if (arr[middle] == target)
+			return (middle);
 
-		if (arr[mid] > target)
-			right = mid - 1;
+		if (arr[middle] > target)
+			right = middle - 1;
 		else
-			left = mid + 1;
+			left = middle + 1;
 	}
 
 	return (-1);
