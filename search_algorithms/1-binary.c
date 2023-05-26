@@ -1,3 +1,4 @@
+
 #include "search_algos.h"
 
 /**
@@ -11,33 +12,41 @@
   * Prints the current subarray being searched after each iteration.
   */
 
+
 int binary_search(int *arr, size_t size, int target)
 {
-	size_t left, right, middle;
+	int low = 0, high = size - 1, mid, i;
 
 	if (arr == NULL)
-		return (-1);
-
-	left = 0;
-	right = size - 1;
-
-	while (right >= left)
 	{
-		printf("Searching subarray: ");
-		for (middle = left; middle < right; middle++)
-			printf("%d, ", arr[middle]);
-		printf("%d\n", arr[middle]);
-
-		middle = left + (right - left) / 2;
-
-		if (arr[middle] == target)
-			return (middle);
-
-		if (arr[middle] > target)
-			right = middle - 1;
-		else
-			left = middle + 1;
+		return (-1);
 	}
 
+	while (low <= high)
+	{
+		mid = (low + high) / 2;
+		printf("Searching in array: ");
+		for (i = low; i <= high; i++)
+		{
+			printf("%d", arr[i]);
+			if (i < high)
+			{
+				printf(", ");
+			}
+		}
+		printf("\n");
+		if (arr[mid] == target)
+		{
+			return (mid);
+		}
+		else if (arr[mid] < target)
+		{
+			low = mid + 1;
+		}
+		else
+		{
+			high = mid - 1;
+		}
+	}
 	return (-1);
 }
